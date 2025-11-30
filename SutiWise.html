@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SituWise — Prototype</title>
+  <style>
+    :root{
+      --bg:#f4f6fb; --card:#fff; --accent:#2563eb; --muted:#6b7280;
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#0f172a}
+    .wrap{max-width:920px;margin:24px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#6366f1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    nav a{margin-left:10px;color:var(--muted);text-decoration:none;font-weight:600}
+    .card{background:var(--card);padding:14px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+    .grid{display:grid;gap:12px}
+    .grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+    h1{margin:0;font-size:22px}
+    .lead{color:var(--muted);margin-top:6px;font-size:14px}
+    .hero{display:flex;gap:18px;margin-top:18px;align-items:flex-start}
+    .hero .left{flex:1}
+    .btn{display:inline-block;padding:9px 12px;border-radius:10px;text-decoration:none;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-outline{border:1px solid #e6eefb;color:var(--accent);background:transparent}
+    .proto-preview{height:220px;background:#eef2ff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    form label{display:block;margin-top:10px;font-weight:600;font-size:13px}
+    form input, form select {width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #e6eef8;font-size:14px}
+    .small{font-size:13px;color:var(--muted)}
+    .list-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;border:1px solid #f0f4ff;background:#fff}
+    .avatar{width:62px;height:62px;border-radius:50%;background:#c7d2fe;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1e293b}
+    .ach-bar{height:8px;background:#eef2ff;border-radius:999px;overflow:hidden;margin-top:8px}
+    .ach-fill{height:100%;background:linear-gradient(90deg,#60a5fa,#6366f1)}
+    .footer{margin-top:24px;text-align:center;color:var(--muted);font-size:13px}
+    @media(max-width:720px){.hero{flex-direction:column}.hero .left, .hero .right{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">SW</div>
+        <div>
+          <div style="font-weight:800">SituWise</div>
+          <div class="small">Interactive learning for decision-making</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#" onclick="navigate('home')">Home</a>
+        <a href="#" onclick="navigate('play')">Play Mode</a>
+        <a href="#" onclick="navigate('profile')">Profile</a>
+      </nav>
+    </header>
+
+    <main id="app">
+      <!-- Sign Up (default if no user) -->
+      <section id="signup" class="card" style="margin-top:18px;">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="flex:1">
+            <h1>Sign Up</h1>
+            <div class="lead">Create an account to start solving real-world situations.</div>
+          </div>
+        </div>
+
+        <form id="signupForm" style="margin-top:12px" onsubmit="return handleSignup(event)">
+          <label>Full name</label>
+          <input id="name" type="text" placeholder="Alex Johnson" required>
+
+          <label>Password</label>
+          <input id="password" type="password" placeholder="Choose a password" required>
+
+          <label>Role (optional)</label>
+          <select id="role">
+            <option>Learner</option>
+            <option>Facilitator</option>
+            <option>Teacher</option>
+          </select>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn btn-primary" type="submit">Sign Up</button>
+            <button type="button" class="btn" onclick="prefillDemo()">Use Demo</button>
+          </div>
+          <div class="small" style="margin-top:8px">Already have account? <a href="#" onclick="navigate('profile')">Go to Profile</a></div>
+        </form>
+      </section>
+
+      <!-- Profile -->
+      <section id="profile" class="card" style="margin-top:18px;display:none;">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="avatar" id="profileAvatar">AJ</div>
+          <div style="flex:1">
+            <div id="profileName" style="font-weight:800;font-size:18px">Alex Johnson</div>
+            <div class="small" id="profileRole">Designer / Researcher</div>
+            <div style="margin-top:10px">
+              <div style="font-weight:700">Achievements</div>
+              <div class="small">Critical Thinking • Decision-Making</div>
+              <div class="ach-bar"><div class="ach-fill" style="width:45%"></div></div>
+            </div>
+          </div>
+          <div>
+            <button class="btn btn-outline" onclick="logout()">Log out</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <h2 style="margin:0 0 8px 0">Your Progress</h2>
+          <div class="grid grid-3">
+            <div class="card list-item">
+              <div style="width:12px;height:12px;background:#60a5fa;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Real-World Situations</div>
+                <div class="small">Continue</div>
+              </div>
+            </div>
+            <div class="card list-item">
+              <div style="width:12px;height:12px;background:#a78bfa;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Corporate Challenges</div>
+                <div class="small">Start</div>
+              </div>
+            </div>
+            <div class="card list-item">
+              <div style="width:12px;height:12px;background:#f97316;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Social Dilemmas</div>
+                <div class="small">Start</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home -->
+      <section id="home" class="card" style="margin-top:18px;display:none;">
+        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+          <div>
+            <h1>Home</h1>
+            <div class="lead">Choose a scenario category to practice decision-making.</div>
+          </div>
+          <div style="min-width:220px">
+            <div class="proto-preview">Scenario preview / tips</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div class="grid grid-3">
+            <div class="card list-item" onclick="openCategory('real')">
+              <div style="width:12px;height:12px;background:#60a5fa;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Real-World Scenarios</div>
+                <div class="small">You chose to address the issue directly... (example)</div>
+              </div>
+              <div style="margin-left:auto"><button class="btn btn-primary" onclick="openCategory('real');event.stopPropagation()">Continue</button></div>
+            </div>
+
+            <div class="card list-item" onclick="openCategory('corp')">
+              <div style="width:12px;height:12px;background:#a78bfa;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Corporate Challenges</div>
+                <div class="small">Budget allocation, team conflict, market entry...</div>
+              </div>
+              <div style="margin-left:auto"><button class="btn btn-primary" onclick="openCategory('corp');event.stopPropagation()">Start</button></div>
+            </div>
+
+            <div class="card list-item" onclick="openCategory('social')">
+              <div style="width:12px;height:12px;background:#f97316;border-radius:4px"></div>
+              <div>
+                <div style="font-weight:700">Social Dilemmas</div>
+                <div class="small">Ethics, research stance, public opinion...</div>
+              </div>
+              <div style="margin-left:auto"><button class="btn btn-primary" onclick="openCategory('social');event.stopPropagation()">Start</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Play Mode / Category -->
+      <section id="play" class="card" style="margin-top:18px;display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h1>Play Mode</h1>
+            <div class="small">Pick a scenario to play</div>
+          </div>
+          <div>
+            <button class="btn" onclick="navigate('home')">Back</button>
+          </div>
+        </div>
+
+        <div id="scenariosList" style="margin-top:12px" class="grid grid-3">
+          <!-- scenarios injected here -->
+        </div>
+      </section>
+
+      <!-- Scenario Detail -->
+      <section id="scenarioDetail" class="card" style="margin-top:18px;display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h1 id="scTitle">Scenario Title</h1>
+            <div class="small" id="scDesc">Short description of the scenario goes here...</div>
+          </div>
+          <div>
+            <button class="btn btn-primary" onclick="startScenario()">Start</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div id="scenarioContent" class="card" style="background:#f8fafc">You chose to address the issue directly, which helped resolve the conflict and get the project back on track.</div>
+        </div>
+      </section>
+
+    </main>
+
+    <div class="footer">Prototype based on your uploaded layout. Save as index.html and open in browser. :contentReference[oaicite:1]{index=1}</div>
+  </div>
+
+  <script>
+    // Data (sample scenarios - from your layout)
+    const SCENARIOS = {
+      real: [
+        { id: 'r1', title: 'Team Conflict During Deadline', desc: 'Your team is facing a deadline and two members are not cooperating, causing delays.', detail: 'Address the issue directly to get project back on track.' },
+        { id: 'r2', title: 'Risk-Taking Game', desc: 'A choice between safe route and risky innovation.', detail: 'Assess consequences and choose balance.' }
+      ],
+      corp: [
+        { id: 'c1', title: 'Budget Allocation for Project', desc: 'Decide where to allocate limited budget among teams.', detail: 'Prioritize high-impact areas.'},
+        { id: 'c2', title: 'Team Allocation for New Project', desc: 'Allocate roles fairly among members.', detail: 'Match skills to tasks.'}
+      ],
+      social: [
+        { id: 's1', title: 'Ethical Dilemmas in Policy', desc: 'Make a policy decision with ethical trade-offs.', detail: 'Consider stakeholders & fairness.'}
+      ]
+    };
+
+    // Navigation & DOM
+    function $(id){return document.getElementById(id)}
+    function showOnly(ids){
+      ['signup','profile','home','play','scenarioDetail'].forEach(i=>{
+        $(i).style.display = ids.includes(i) ? '' : 'none'
+      })
+    }
+
+    function navigate(target){
+      if(target==='profile'){
+        const u = getUser(); if(!u){ alert('Please sign up first.'); navigate('signup'); return; }
+        renderProfile(); showOnly(['profile'])
+      } else if(target==='home'){ renderHome(); showOnly(['home']) }
+      else if(target==='play'){ renderPlay(); showOnly(['play']) }
+      else if(target==='signup'){ showOnly(['signup']) }
+      else console.log('nav',target)
+    }
+
+    // Signup handling
+    function handleSignup(e){
+      e.preventDefault();
+      const name = $('name').value.trim();
+      const pwd = $('password').value;
+      const role = $('role').value;
+      if(!name || !pwd){ alert('Enter details'); return false; }
+      const user = { name, role, created: new Date().toISOString() }
+      localStorage.setItem('situ_user', JSON.stringify(user));
+      renderProfile();
+      showOnly(['profile']);
+      return false;
+    }
+
+    function prefillDemo(){
+      $('name').value='Alex Johnson';
+      $('password').value='demo123';
+      $('role').value='Learner';
+    }
+
+    function getUser(){ try{ return JSON.parse(localStorage.getItem('situ_user')) }catch(e){return null} }
+
+    function logout(){
+      localStorage.removeItem('situ_user');
+      alert('Logged out (local demo).');
+      showOnly(['signup']);
+    }
+
+    // Render profile
+    function renderProfile(){
+      const u = getUser();
+      if(!u){ showOnly(['signup']); return; }
+      $('profileName').textContent = u.name;
+      $('profileRole').textContent = u.role || 'Learner';
+      const initials = u.name.split(' ').map(s=>s[0]).slice(0,2).join('').toUpperCase();
+      $('profileAvatar').textContent = initials;
+    }
+
+    // Home render
+    function renderHome(){
+      // nothing dynamic for now
+    }
+
+    // Play/Scenarios render
+    function openCategory(cat){
+      // set current category and show play mode with filtered list
+      window.currentCat = cat;
+      renderPlay();
+      showOnly(['play']);
+    }
+
+    function renderPlay(){
+      const list = $('scenariosList');
+      list.innerHTML = '';
+      const cat = window.currentCat || 'real';
+      const arr = SCENARIOS[cat] || [];
+      arr.forEach(s=>{
+        const div = document.createElement('div');
+        div.className='card list-item';
+        div.style.cursor='pointer';
+        div.innerHTML = `
+          <div style="width:12px;height:12px;background:#60a5fa;border-radius:4px"></div>
+          <div style="flex:1">
+            <div style="font-weight:700">${s.title}</div>
+            <div class="small">${s.desc}</div>
+          </div>
+          <div style="margin-left:auto"><button class="btn btn-primary">Open</button></div>
+        `;
+        div.onclick = ()=> openScenario(s);
+        list.appendChild(div);
+      });
+    }
+
+    function openScenario(s){
+      $('scTitle').textContent = s.title;
+      $('scDesc').textContent = s.desc;
+      $('scenarioContent').textContent = s.detail;
+      showOnly(['scenarioDetail']);
+    }
+
+    function startScenario(){
+      alert('Scenario started — here you would show interactive choices and record decisions (prototype).');
+    }
+
+    // On load: if user exists, go to profile, else show signup
+    (function init(){
+      const u = getUser();
+      if(u){ renderProfile(); showOnly(['profile']) }
+      else { showOnly(['signup']) }
+    })();
+  </script>
+</body>
+</html>
